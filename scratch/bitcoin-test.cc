@@ -76,36 +76,28 @@ main (int argc, char *argv[])
 
 #ifdef MPI_TEST
   
-  double bitcoinMinersHash[] = {0.289, 0.196, 0.159, 0.133, 0.066, 0.054,
+  double minersHashesValues[] = {0.289, 0.196, 0.159, 0.133, 0.066, 0.054,
                                 0.029, 0.016, 0.012, 0.012, 0.012, 0.009,
                                 0.005, 0.005, 0.002, 0.002};
-  enum BitcoinRegion bitcoinMinersRegions[] = {ASIA_PACIFIC, ASIA_PACIFIC, ASIA_PACIFIC, NORTH_AMERICA, ASIA_PACIFIC, NORTH_AMERICA,
+  enum BitcoinRegion minersRegionsValues[] = {ASIA_PACIFIC, ASIA_PACIFIC, ASIA_PACIFIC, NORTH_AMERICA, ASIA_PACIFIC, NORTH_AMERICA,
                                                EUROPE, EUROPE, NORTH_AMERICA, NORTH_AMERICA, NORTH_AMERICA, EUROPE,
                                                NORTH_AMERICA, NORTH_AMERICA, NORTH_AMERICA, NORTH_AMERICA};
-
-  double litecoinMinersHash[] = {0.366, 0.314, 0.122, 0.072, 0.028, 0.024, 0.022, 0.018, 0.012, 0.01, 0.006, 0.006};
-  enum BitcoinRegion litecoinMinersRegions[] = {ASIA_PACIFIC, ASIA_PACIFIC, ASIA_PACIFIC, NORTH_AMERICA, EUROPE, NORTH_AMERICA,
-                                                NORTH_AMERICA, ASIA_PACIFIC, NORTH_AMERICA, NORTH_AMERICA, NORTH_AMERICA, NORTH_AMERICA};	
-
-  double dogecoinMinersHash[] = {0.33, 0.26, 0.19, 0.09, 0.03, 0.02, 0.02, 0.02, 0.01, 0.01, 0.01, 0.01};
-  enum BitcoinRegion dogecoinMinersRegions[] = {ASIA_PACIFIC, ASIA_PACIFIC, ASIA_PACIFIC, NORTH_AMERICA, EUROPE, NORTH_AMERICA,
-                                                NORTH_AMERICA, ASIA_PACIFIC, NORTH_AMERICA, ASIA_PACIFIC, NORTH_AMERICA, NORTH_AMERICA};
 #else
 	
 
-/*   double bitcoinMinersHash[] = {1};
-  enum BitcoinRegion bitcoinMinersRegions[] = {ASIA_PACIFIC}; */
-  double bitcoinMinersHash[] = {0.5, 0.5};
-  enum BitcoinRegion bitcoinMinersRegions[] = {ASIA_PACIFIC, ASIA_PACIFIC};
-/*   double bitcoinMinersHash[] = {0.4, 0.3, 0.3};
-  enum BitcoinRegion bitcoinMinersRegions[] = {ASIA_PACIFIC, ASIA_PACIFIC, ASIA_PACIFIC}; */
+/*   double minersHashesValues[] = {1};
+  enum BitcoinRegion minersRegionsValues[] = {ASIA_PACIFIC}; */
+  double minersHashesValues[] = {0.5, 0.5};
+  enum BitcoinRegion minersRegionsValues[] = {ASIA_PACIFIC, ASIA_PACIFIC};
+/*   double minersHashesValues[] = {0.4, 0.3, 0.3};
+  enum BitcoinRegion minersRegionsValues[] = {ASIA_PACIFIC, ASIA_PACIFIC, ASIA_PACIFIC}; */
   
   double litecoinMinersHash[] = {0.366, 0.314, 0.122, 0.072, 0.028, 0.024, 0.022, 0.018, 0.012, 0.01, 0.006, 0.006};
-  enum BitcoinRegion litecoinMinersRegions[] = {ASIA_PACIFIC, ASIA_PACIFIC, ASIA_PACIFIC, NORTH_AMERICA, EUROPE, NORTH_AMERICA,
+  enum BitcoinRegion litecoinMinersRegionsValues[] = {ASIA_PACIFIC, ASIA_PACIFIC, ASIA_PACIFIC, NORTH_AMERICA, EUROPE, NORTH_AMERICA,
                                                 NORTH_AMERICA, ASIA_PACIFIC, NORTH_AMERICA, NORTH_AMERICA, NORTH_AMERICA, NORTH_AMERICA};	
 
   double dogecoinMinersHash[] = {0.33, 0.26, 0.19, 0.09, 0.03, 0.02, 0.02, 0.02, 0.04};
-  enum BitcoinRegion dogecoinMinersRegions[] = {ASIA_PACIFIC, ASIA_PACIFIC, ASIA_PACIFIC, NORTH_AMERICA, EUROPE, NORTH_AMERICA,
+  enum BitcoinRegion dogecoinMinersRegionsValues[] = {ASIA_PACIFIC, ASIA_PACIFIC, ASIA_PACIFIC, NORTH_AMERICA, EUROPE, NORTH_AMERICA,
                                                 NORTH_AMERICA, ASIA_PACIFIC, NORTH_AMERICA};
 #endif
 
@@ -156,53 +148,23 @@ main (int argc, char *argv[])
     std::cout << "You cannot select both litecoin and dogecoin behaviour" << std::endl;
 	return 0;
   }
-  
-  if (litecoin)
-  {
-    averageBlockGenIntervalMinutes =  2.5;
-    totalNoNodes = 1000;
-    cryptocurrency = LITECOIN;
-	
-    noMiners = sizeof(litecoinMinersHash)/sizeof(double);
-    minersHash = new double[noMiners];
-	minersRegions = new enum BitcoinRegion[noMiners];
-	
-    for(int i = 0; i < noMiners; i++)
-    {
-      minersHash[i] = litecoinMinersHash[i];
-      minersRegions[i] = litecoinMinersRegions[i];
-    }	  
-  }
-  else if (dogecoin)
-  {
-    averageBlockGenIntervalMinutes =  1;
-	totalNoNodes = 650;
-    cryptocurrency = DOGECOIN;
-	
-    noMiners = sizeof(dogecoinMinersHash)/sizeof(double);
-    minersHash = new double[noMiners];
-	minersRegions = new enum BitcoinRegion[noMiners];
-	
-    for(int i = 0; i < noMiners; i++)
-    {
-      minersHash[i] = dogecoinMinersHash[i];
-      minersRegions[i] = dogecoinMinersRegions[i];
-    }	
-  }
-  else
-  {
-    minersHash = new double[noMiners];
-	minersRegions = new enum BitcoinRegion[noMiners];
-	
-    for(int i = 0; i < noMiners/16; i++)
-    {
-      for (int j = 0; j < 16 ; j++)
-      {
-        minersHash[i*16 + j] = bitcoinMinersHash[j]*16/noMiners;
-        minersRegions[i*16 + j] = bitcoinMinersRegions[j];
-      }
-    }	
 
+  if (litecoin) {
+    cryptocurrency = LITECOIN;
+  } else if (dogecoin) {
+    cryptocurrency = DOGECOIN;
+  }
+
+  minersHash = new double[noMiners];
+  minersRegions = new enum BitcoinRegion[noMiners];
+
+  for(int i = 0; i < noMiners/16; i++)
+  {
+    for (int j = 0; j < 16 ; j++)
+    {
+      minersHash[i*16 + j] = minersHashesValues[j]*16/noMiners;
+      minersRegions[i*16 + j] = minersRegionsValues[j];
+    }
   }
 
   averageBlockGenIntervalSeconds = averageBlockGenIntervalMinutes * secsPerMin;
