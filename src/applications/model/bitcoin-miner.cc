@@ -453,15 +453,12 @@ BitcoinMiner::MineBlock (void)
   {
     m_nextBlockSize = m_blockSizeDistribution(m_generator) * 1000;	// *1000 because the m_blockSizeDistribution returns KBytes
 
-    if (m_cryptocurrency == BITCOIN)
-    {
-      // The block size is linearly dependent on the averageBlockGenIntervalSeconds
-      if(m_nextBlockSize < m_maxBlockSize - m_headersSizeBytes)
-        m_nextBlockSize = m_nextBlockSize*m_averageBlockGenIntervalSeconds / m_realAverageBlockGenIntervalSeconds
-                        + m_headersSizeBytes;	
-      else
-        m_nextBlockSize = m_nextBlockSize*m_averageBlockGenIntervalSeconds / m_realAverageBlockGenIntervalSeconds;
-    }
+    // The block size is linearly dependent on the averageBlockGenIntervalSeconds
+    if(m_nextBlockSize < m_maxBlockSize - m_headersSizeBytes)
+      m_nextBlockSize = m_nextBlockSize*m_averageBlockGenIntervalSeconds / m_realAverageBlockGenIntervalSeconds
+                      + m_headersSizeBytes;	
+    else
+      m_nextBlockSize = m_nextBlockSize*m_averageBlockGenIntervalSeconds / m_realAverageBlockGenIntervalSeconds;
   }
 
   if (m_nextBlockSize < m_averageTransactionSize)
@@ -470,7 +467,7 @@ BitcoinMiner::MineBlock (void)
   Block newBlock (height, minerId, parentBlockMinerId, m_nextBlockSize,
                   currentTime, currentTime, Ipv4Address("127.0.0.1"));
 	  
-  switch(m_blockBroadcastType)				  
+  switch(m_blockBroadcastType)
   {
     case STANDARD:
     {
