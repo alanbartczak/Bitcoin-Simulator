@@ -64,9 +64,9 @@ main (int argc, char *argv[])
   bool test = false;
   
   
-  double minersHash[] = {0.185, 0.159, 0.133, 0.066, 0.054,
-                                0.029, 0.016, 0.012, 0.012, 0.012, 0.009,
-                                0.005, 0.005, 0.002, 0.002, 0.3};
+  double minersHash[] = {0.198, 0.194, 0.141, 0.075, 0.063,
+                                0.038, 0.025, 0.021, 0.018, 0.018, 0.015,
+                                0.011, 0.011, 0.010, 0.009, 0.153};
   enum BitcoinRegion minersRegions[] = {ASIA_PACIFIC, ASIA_PACIFIC, NORTH_AMERICA, ASIA_PACIFIC, NORTH_AMERICA,
                                                EUROPE, EUROPE, NORTH_AMERICA, NORTH_AMERICA, NORTH_AMERICA, EUROPE,
                                                NORTH_AMERICA, NORTH_AMERICA, NORTH_AMERICA, NORTH_AMERICA, ASIA_PACIFIC};
