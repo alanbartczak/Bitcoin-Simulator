@@ -49,7 +49,7 @@ BitcoinSelfishMiner::GetTypeId (void)
                    MakeUintegerChecker<uint32_t> ())
     .AddAttribute ("FixedBlockSize", 
 				   "The fixed size of the block",
-                   UintegerValue (1000000),
+                   UintegerValue (100000),
                    MakeUintegerAccessor (&BitcoinSelfishMiner::m_fixedBlockSize),
                    MakeUintegerChecker<uint32_t> ())				   
     .AddAttribute ("FixedBlockIntervalGeneration", 
@@ -79,7 +79,7 @@ BitcoinSelfishMiner::GetTypeId (void)
                    MakeDoubleChecker<double> ())
     .AddAttribute ("AverageBlockGenIntervalSeconds", 
 				   "The average block generation interval we aim at (in seconds)",
-                   DoubleValue (2.5*60),
+                   DoubleValue (1*60),
                    MakeDoubleAccessor (&BitcoinSelfishMiner::m_averageBlockGenIntervalSeconds),
                    MakeDoubleChecker<double> ())
     .AddTraceSource ("Rx",

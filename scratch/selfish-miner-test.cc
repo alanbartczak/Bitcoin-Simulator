@@ -54,19 +54,18 @@ main (int argc, char *argv[])
   double tStart = get_wall_time(), tFinish, tSimStart, tSimFinish;
   const int secsPerMin = 60;
   const uint16_t bitcoinPort = 8333;
-  const double realAverageBlockGenIntervalMinutes = 2.5; //minutes
+  const double realAverageBlockGenIntervalMinutes = 1; //minutes
   int targetNumberOfBlocks = 10000;
-  double averageBlockGenIntervalSeconds = 2.5 * secsPerMin; //seconds
+  double averageBlockGenIntervalSeconds = 1 * secsPerMin; //seconds
   double fixedHashRate = 0.5;
   int start = 0;
   double bandwidth = 8;
   double latency = 40;
   bool test = false;
   
-  double minersHash[] = {0.324, 0.273, 0.081, 0.031, 0.026, 0.022, 0.020, 0.014, 0.014, 0.004, 0.003, 0.188};
+  double minersHash[] = {0.270, 0.200, 0.130, 0.090, 0.030, 0.022, 0.020, 0.020, 0.010, 0.010, 0.010, 0.188};
   enum BitcoinRegion minersRegions[] = {ASIA_PACIFIC, ASIA_PACIFIC, ASIA_PACIFIC, NORTH_AMERICA, EUROPE, NORTH_AMERICA,
-                                                NORTH_AMERICA, ASIA_PACIFIC, NORTH_AMERICA, NORTH_AMERICA, NORTH_AMERICA, NORTH_AMERICA};	
-
+                                                NORTH_AMERICA, ASIA_PACIFIC, NORTH_AMERICA, ASIA_PACIFIC, NORTH_AMERICA, NORTH_AMERICA};
 /*   double minersHash[] = {0.4, 0.4, 0.3};
   enum BitcoinRegion minersRegions[] = {ASIA_PACIFIC, ASIA_PACIFIC, ASIA_PACIFIC}; */
 
