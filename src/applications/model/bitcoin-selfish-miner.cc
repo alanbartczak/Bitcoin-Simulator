@@ -64,7 +64,7 @@ BitcoinSelfishMiner::GetTypeId (void)
                    MakeTimeChecker())
     .AddAttribute ("HashRate", 
 				   "The hash rate of the selfish miner",
-                   DoubleValue (0.2),
+                   DoubleValue (0.153),
                    MakeDoubleAccessor (&BitcoinSelfishMiner::m_hashRate),
                    MakeDoubleChecker<double> ())	
     .AddAttribute ("BlockGenBinSize", 
