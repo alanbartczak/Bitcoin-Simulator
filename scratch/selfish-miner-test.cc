@@ -50,7 +50,7 @@ main (int argc, char *argv[])
   bool unsolicitedRelayNetwork = false;
   double ud = 0;
   double r = 0;
-  enum Cryptocurrency  cryptocurrency = LITECOIN;
+  enum Cryptocurrency  cryptocurrency = DOGECOIN;
   double tStart = get_wall_time(), tFinish, tSimStart, tSimFinish;
   const int secsPerMin = 60;
   const uint16_t bitcoinPort = 8333;
