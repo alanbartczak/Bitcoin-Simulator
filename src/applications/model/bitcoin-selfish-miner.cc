@@ -44,14 +44,14 @@ BitcoinSelfishMiner::GetTypeId (void)
                    MakeTypeIdChecker ())
     .AddAttribute ("NumberOfMiners", 
 				   "The number of miners",
-                   UintegerValue (16),
+                   UintegerValue (12),
                    MakeUintegerAccessor (&BitcoinSelfishMiner::m_noMiners),
                    MakeUintegerChecker<uint32_t> ())
     .AddAttribute ("FixedBlockSize", 
 				   "The fixed size of the block",
                    UintegerValue (0),
                    MakeUintegerAccessor (&BitcoinSelfishMiner::m_fixedBlockSize),
-                   MakeUintegerChecker<uint32_t> ())				   
+                   MakeUintegerChecker<uint32_t> ())			   
     .AddAttribute ("FixedBlockIntervalGeneration", 
                    "The fixed time to wait between two consecutive block generations",
                    DoubleValue (0),
@@ -64,7 +64,7 @@ BitcoinSelfishMiner::GetTypeId (void)
                    MakeTimeChecker())
     .AddAttribute ("HashRate", 
 				   "The hash rate of the selfish miner",
-                   DoubleValue (0.2),
+                   DoubleValue (0.188),
                    MakeDoubleAccessor (&BitcoinSelfishMiner::m_hashRate),
                    MakeDoubleChecker<double> ())	
     .AddAttribute ("BlockGenBinSize", 
@@ -79,7 +79,7 @@ BitcoinSelfishMiner::GetTypeId (void)
                    MakeDoubleChecker<double> ())
     .AddAttribute ("AverageBlockGenIntervalSeconds", 
 				   "The average block generation interval we aim at (in seconds)",
-                   DoubleValue (10*60),
+                   DoubleValue (30),
                    MakeDoubleAccessor (&BitcoinSelfishMiner::m_averageBlockGenIntervalSeconds),
                    MakeDoubleChecker<double> ())
     .AddTraceSource ("Rx",
@@ -131,27 +131,29 @@ BitcoinSelfishMiner::StartApplication ()    // Called at time specified by Start
     m_nextBlockSize = m_fixedBlockSize;
   else
   {
-    std::array<double,201> intervals {0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 
-                                     130, 135, 140, 145, 150, 155, 160, 165, 170, 175, 180, 185, 190, 195, 200, 205, 210, 215, 220, 225, 230, 235, 
-                                     240, 245, 250, 255, 260, 265, 270, 275, 280, 285, 290, 295, 300, 305, 310, 315, 320, 325, 330, 335, 340, 345, 
-                                     350, 355, 360, 365, 370, 375, 380, 385, 390, 395, 400, 405, 410, 415, 420, 425, 430, 435, 440, 445, 450, 455, 
-                                     460, 465, 470, 475, 480, 485, 490, 495, 500, 505, 510, 515, 520, 525, 530, 535, 540, 545, 550, 555, 560, 565, 
-                                     570, 575, 580, 585, 590, 595, 600, 605, 610, 615, 620, 625, 630, 635, 640, 645, 650, 655, 660, 665, 670, 675, 
-                                     680, 685, 690, 695, 700, 705, 710, 715, 720, 725, 730, 735, 740, 745, 750, 755, 760, 765, 770, 775, 780, 785, 
-                                     790, 795, 800, 805, 810, 815, 820, 825, 830, 835, 840, 845, 850, 855, 860, 865, 870, 875, 880, 885, 890, 895, 
-                                     900, 905, 910, 915, 920, 925, 930, 935, 940, 945, 950, 955, 960, 965, 970, 975, 980, 985, 990, 995, 1000};
-    std::array<double,200> weights {3.58, 0.33, 0.35, 0.4, 0.38, 0.4, 0.53, 0.46, 0.43, 0.48, 0.56, 0.69, 0.62, 0.62, 0.63, 0.62, 0.62, 0.63, 0.73, 
-                                    1.96, 0.75, 0.76, 0.73, 0.64, 0.66, 0.66, 0.66, 0.7, 0.66, 0.73, 0.68, 0.66, 0.67, 0.66, 0.72, 0.68, 0.64, 0.61, 
-                                    0.63, 0.58, 0.66, 0.6, 0.7, 0.62, 0.49, 0.59, 0.58, 0.59, 0.63, 1.59, 0.6, 0.58, 0.54, 0.62, 0.55, 0.54, 0.52, 
-                                    0.5, 0.53, 0.55, 0.49, 0.47, 0.51, 0.49, 0.52, 0.49, 0.49, 0.49, 0.56, 0.75, 0.51, 0.42, 0.46, 0.47, 0.43, 0.38, 
-                                    0.39, 0.39, 0.41, 0.43, 0.38, 0.41, 0.36, 0.41, 0.38, 0.42, 0.42, 0.37, 0.41, 0.41, 0.34, 0.32, 0.37, 0.32, 0.34, 
-                                    0.34, 0.34, 0.32, 0.41, 0.62, 0.33, 0.4, 0.32, 0.32, 0.29, 0.35, 0.32, 0.32, 0.28, 0.26, 0.25, 0.29, 0.26, 0.27, 
-                                    0.27, 0.24, 0.28, 0.3, 0.27, 0.23, 0.23, 0.28, 0.25, 0.29, 0.24, 0.21, 0.26, 0.29, 0.23, 0.2, 0.24, 0.25, 0.23, 
-                                    0.21, 0.26, 0.38, 0.24, 0.21, 0.25, 0.23, 0.22, 0.22, 0.24, 0.23, 0.23, 0.26, 0.24, 0.28, 0.64, 9.96, 0.15, 0.11, 
-                                    0.11, 0.1, 0.1, 0.1, 0.11, 0.11, 0.12, 0.13, 0.12, 0.16, 0.12, 0.13, 0.12, 0.1, 0.13, 0.13, 0.13, 0.25, 0.1, 0.14, 
-                                    0.14, 0.12, 0.14, 0.14, 0.17, 0.15, 0.19, 0.38, 0.2, 0.19, 0.24, 0.26, 0.36, 1.58, 1.49, 0.1, 0.2, 1.98, 0.05, 0.08, 
-                                    0.07, 0.07, 0.14, 0.08, 0.08, 0.53, 3.06, 3.31};
-                                
+    std::array<double,201> intervals {0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0,
+                  10.5, 11.0, 11.5, 12.0, 12.5, 13.0, 13.5, 14.0, 14.5, 15.0, 15.5, 16.0, 16.5, 17.0, 17.5, 18.0, 18.5, 19.0, 19.5,
+                  20.0, 20.5, 21.0, 21.5, 22.0, 22.5, 23.0, 23.5, 24.0, 24.5, 25.0, 25.5, 26.0, 26.5, 27.0, 27.5, 28.0, 28.5, 29.0,
+                  29.5, 30.0, 30.5, 31.0, 31.5, 32.0, 32.5, 33.0, 33.5, 34.0, 34.5, 35.0, 35.5, 36.0, 36.5, 37.0, 37.5, 38.0, 38.5,
+                  39.0, 39.5, 40.0, 40.5, 41.0, 41.5, 42.0, 42.5, 43.0, 43.5, 44.0, 44.5, 45.0, 45.5, 46.0, 46.5, 47.0, 47.5, 48.0,
+                  48.5, 49.0, 49.5, 50.0, 50.5, 51.0, 51.5, 52.0, 52.5, 53.0, 53.5, 54.0, 54.5, 55.0, 55.5, 56.0, 56.5, 57.0, 57.5,
+                  58.0, 58.5, 59.0, 59.5, 60.0, 60.5, 61.0, 61.5, 62.0, 62.5, 63.0, 63.5, 64.0, 64.5, 65.0, 65.5, 66.0, 66.5, 67.0,
+                  67.5, 68.0, 68.5, 69.0, 69.5, 70.0, 70.5, 71.0, 71.5, 72.0, 72.5, 73.0, 73.5, 74.0, 74.5, 75.0, 75.5, 76.0, 76.5,
+                  77.0, 77.5, 78.0, 78.5, 79.0, 79.5, 80.0, 80.5, 81.0, 81.5, 82.0, 82.5, 83.0, 83.5, 84.0, 84.5, 85.0, 85.5, 86.0,
+                  86.5, 87.0, 87.5, 88.0, 88.5, 89.0, 89.5, 90.0, 90.5, 91.0, 91.5, 92.0, 92.5, 93.0, 93.5, 94.0, 94.5, 95.0, 95.5,
+                  96.0, 96.5, 97.0, 97.5, 98.0, 98.5, 99.0, 99.5, 100.0};
+    std::array<double,200> weights {38.91, 5.76, 4.97, 4.11, 3.4, 3.13, 2.77, 2.36, 2.24, 2.04, 1.85, 1.74, 1.55, 1.47, 1.32, 1.19, 1.1, 1.0, 0.89,
+                0.87, 0.82, 0.75, 0.73, 0.63, 0.61, 0.61, 0.53, 0.52, 0.52, 0.56, 0.47, 0.48, 0.45, 0.39, 0.4, 0.37, 0.37, 0.34,
+                0.32, 0.34, 0.32, 0.27, 0.32, 0.32, 0.3, 0.26, 0.25, 0.35, 0.89, 0.18, 0.12, 0.11, 0.1, 0.1, 0.09, 0.1, 0.09, 0.1,
+                0.09, 0.1, 0.08, 0.08, 0.07, 0.07, 0.05, 0.07, 0.07, 0.06, 0.06, 0.06, 0.05, 0.05, 0.04, 0.05, 0.03, 0.05, 0.04,
+                0.04, 0.04, 0.04, 0.04, 0.05, 0.03, 0.03, 0.04, 0.02, 0.03, 0.02, 0.02, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.02,
+                0.05, 0.09, 0.01, 0.02, 0.02, 0.02, 0.01, 0.01, 0.01, 0.02, 0.01, 0.01, 0.02, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01,
+                0.01, 0.02, 0.01, 0.01, 0.01, 0.01, 0.02, 0.0, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.0, 0.01, 0.01, 0.01, 0.01,
+                0.01, 0.01, 0.01, 0.01, 0.0, 0.01, 0.01, 0.0, 0.0, 0.01, 0.01, 0.01, 0.0, 0.0, 0.0, 0.01, 0.01, 0.01, 0.01, 0.01,
+                0.0, 0.0, 0.0, 0.01, 0.0, 0.01, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.01, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                0.01, 0.0, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0,
+                0.0, 0.24};
+                            
     m_blockSizeDistribution = std::piecewise_constant_distribution<double> (intervals.begin(), intervals.end(), weights.begin());
   }
   
@@ -242,15 +244,12 @@ BitcoinSelfishMiner::MineBlock (void)
   {
     m_nextBlockSize = m_blockSizeDistribution(m_generator) * 1000;	// *1000 because the m_blockSizeDistribution returns KBytes
 
-    if (m_cryptocurrency == BITCOIN)
-    {
-      // The block size is linearly dependent on the averageBlockGenIntervalSeconds
-      if(m_nextBlockSize < m_maxBlockSize - m_headersSizeBytes)
-        m_nextBlockSize = m_nextBlockSize*m_averageBlockGenIntervalSeconds / m_realAverageBlockGenIntervalSeconds
-                        + m_headersSizeBytes;	
-      else
-        m_nextBlockSize = m_nextBlockSize*m_averageBlockGenIntervalSeconds / m_realAverageBlockGenIntervalSeconds;
-    }
+    // The block size is linearly dependent on the averageBlockGenIntervalSeconds
+    if(m_nextBlockSize < m_maxBlockSize - m_headersSizeBytes)
+      m_nextBlockSize = m_nextBlockSize*m_averageBlockGenIntervalSeconds / m_realAverageBlockGenIntervalSeconds
+                      + m_headersSizeBytes;	
+    else
+      m_nextBlockSize = m_nextBlockSize*m_averageBlockGenIntervalSeconds / m_realAverageBlockGenIntervalSeconds;
   }
 
   if (m_nextBlockSize < m_averageTransactionSize)

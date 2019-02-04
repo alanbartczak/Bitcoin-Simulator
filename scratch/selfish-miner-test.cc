@@ -50,13 +50,13 @@ main (int argc, char *argv[])
   bool unsolicitedRelayNetwork = false;
   double ud = 0;
   double r = 0;
-  enum Cryptocurrency  cryptocurrency = BITCOIN;
+  enum Cryptocurrency  cryptocurrency = LITECOIN;
   double tStart = get_wall_time(), tFinish, tSimStart, tSimFinish;
   const int secsPerMin = 60;
   const uint16_t bitcoinPort = 8333;
   const double realAverageBlockGenIntervalMinutes = 10; //minutes
-  int targetNumberOfBlocks = 1000;
-  double averageBlockGenIntervalSeconds = 10 * secsPerMin; //seconds
+  int targetNumberOfBlocks = 10000;
+  double averageBlockGenIntervalSeconds = 30; //seconds
   double fixedHashRate = 0.5;
   int start = 0;
   double bandwidth = 8;
@@ -64,12 +64,9 @@ main (int argc, char *argv[])
   bool test = false;
   
   
-  double minersHash[] = {0.185, 0.159, 0.133, 0.066, 0.054,
-                                0.029, 0.016, 0.012, 0.012, 0.012, 0.009,
-                                0.005, 0.005, 0.002, 0.002, 0.3};
-  enum BitcoinRegion minersRegions[] = {ASIA_PACIFIC, ASIA_PACIFIC, NORTH_AMERICA, ASIA_PACIFIC, NORTH_AMERICA,
-                                               EUROPE, EUROPE, NORTH_AMERICA, NORTH_AMERICA, NORTH_AMERICA, EUROPE,
-                                               NORTH_AMERICA, NORTH_AMERICA, NORTH_AMERICA, NORTH_AMERICA, ASIA_PACIFIC};
+  double minersHash[] = {0.324, 0.273, 0.081, 0.031, 0.026, 0.022, 0.020, 0.014, 0.014, 0.004, 0.003, 0.188};
+  enum BitcoinRegion minersRegions[] = {ASIA_PACIFIC, ASIA_PACIFIC, ASIA_PACIFIC, NORTH_AMERICA, EUROPE, NORTH_AMERICA,
+                                                NORTH_AMERICA, ASIA_PACIFIC, NORTH_AMERICA, NORTH_AMERICA, NORTH_AMERICA, NORTH_AMERICA};
 /*   double minersHash[] = {0.4, 0.4, 0.3};
   enum BitcoinRegion minersRegions[] = {ASIA_PACIFIC, ASIA_PACIFIC, ASIA_PACIFIC}; */
 
